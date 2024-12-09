@@ -1,0 +1,7 @@
+### Create new collection
+POST https://localhost:3000/
+Content-Type: 'application/json'
+
+{
+    "content": "pickup"
+}

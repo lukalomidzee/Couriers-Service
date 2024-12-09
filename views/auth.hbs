@@ -1,0 +1,24 @@
+{{> header}}
+
+{{#if errorMessage}}
+    <div class="container danger text-center">
+        <p style="color: red;">{{errorMessage}}</p>
+    </div>
+{{/if}}
+
+<div class="container border py-4 my-4" style="max-width: 540px">
+    <form id="loginForm" action="/auth/signin" method="POST">
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="loginUsername" name="username" required="true">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="loginPassword" name="password" required="true">
+        </div>
+        <div class="my-2">
+            <a href="/auth/signup">Create user</a>
+        </div>
+        <button type="submit" class="btn btn-primary" id="button">Submit</button>
+    </form> 
+</div>

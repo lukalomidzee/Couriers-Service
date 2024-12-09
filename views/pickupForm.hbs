@@ -1,0 +1,360 @@
+<style>
+    
+    #form-div {
+        box-sizing: border-box;
+    }
+
+    form {
+        width: 100%;
+    }
+
+    .remove-margin {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    #form-header {
+        box-sizing: border-box;
+        padding-left: 0;
+        padding-right: 0;
+        width: 100%;
+    }
+
+    .selector-container {
+        position: relative;
+    }
+    
+    .selector {
+        display: none;
+        position: absolute;
+        box-sizing: content-box;
+        padding: 0;
+        background-color: #FFFFFF;
+        cursor: pointer;
+        width: calc(100% - 1.5rem);
+        border: var(--bs-border-width) solid var(--bs-border-color);
+        border-radius: var(--bs-border-radius);
+        z-index: 1;
+    }
+
+    .selector-item {
+        box-sizing: border-box;
+        border-radius: var(--bs-border-radius);
+    }
+
+    .selector-options div:hover{
+        background-color: #5482ff;
+        color: #FFFFFF;
+    }
+</style>
+
+{{> header}}
+
+{{#if message}}
+    <div class="container text-center">
+        <p style="color: red;">{{message}}</p>
+    </div>
+{{/if}}
+
+<div id="form-div" class="container d-flex col-12 align-items-center justify-content-center">
+    <form autocomplete="off" id="form" class="align-items-center justify-content-center" {{#if pickupToEdit}}action="/pickup/edit/{{id}}"{{else}}action="/pickup"{{/if}}  method="post">
+    {{#if pickupToEdit}}
+        <input type="hidden" name="_method" value="patch">
+    {{/if}}
+        {{!-- Form header --}}
+        <div class="container alert alert-success row align-items-center justify-content-evenly remove-margin" id="form-header" role="alert">
+            {{!-- Date --}}
+            <div class="col-sm-2">
+                <label for="date-input">DATE</label>
+                <input  {{#if pickupToEdit}}value="{{pickupToEdit.date}}"{{/if}} class="form-control input-sm hasDatepicker" data-val="true" type="date" id="date-input" name="date" data-val-regex="Invalid Date Format -PickUpDateStr" data-val-regex-pattern="^(([0-9])|([0-2][0-9])|(3[0-1]))\/(([1-9])|(0[1-9])|(1[0-2]))\/([1-2][0,9][0-9][0-9])$">
+            </div>
+            {{!-- Protocol Selector --}}
+            <div class="col-sm-2 selector-container">
+                <label for="protocol-input">PROTOCOL</label>
+                <input class="form-control input-sm selector-input" type="text" id="protocol-input" name="protocol" data-selector="protocol-options" required="true" {{#if pickupToEdit}}value="{{pickupToEdit.protocol}}"{{/if}}>
+                <div id="protocol-options" class="col-sm-2 container selector selector-options" style="max-height: 10rem; overflow: scroll;">
+                    {{#each protocols}}
+                        <div class="selector-item" value="{{this.id}}" style="padding-left: 1rem;">{{this.protocol}}</div>
+                    {{/each}}
+                </div>
+            </div>
+            {{!-- HAWB --}}
+            <div class="col-sm-2">
+                <label for="hawb-input">HAWB</label>
+                <input class="form-control input-sm" type="text" id="hawb-input" name="hawb" {{#if pickupToEdit}}value="{{pickupToEdit.hawb}}"{{/if}}>
+            </div>
+        </div>
+        
+
+        {{!-- Consignor & Consignee --}}
+        <div class="conatiner align-items-center justify-content-between col-12 mb-2 remove-margin d-flex flex-md-wrap">
+            {{!-- Consignor --}}
+            <div class="container border align-items-center justify-content-between col-5 py-4">
+                <h5 class="text-center">Consignor</h5>
+                {{!-- Consignor Site --}}
+                <div class="col-12 selector-container pb-3">
+                    <label class="pb-1" for="cgnor-site">Site</label>
+                    <input class="form-control input-sm selector-input" type="text" id="cgnor-site" name="consignorSite" data-selector="cgnor-site-options" required="true" {{#if pickupToEdit}}value="{{pickupToEdit.consignorSite}}"{{/if}}>
+                    <div id="cgnor-site-options" class="container selector selector-options" style="width: 100% !important; max-height: 10rem; overflow: scroll;">
+                        {{#each sites}}
+                            <div class="selector-item site-item-cgnor" site-number="{{this.siteNumber}}" site-name="{{this.siteName}}" site-address="{{this.siteAddress}}" site-city="{{this.siteCity}}" site-contact="{{this.siteContact}}" site-contact-number="{{this.siteContactNumber}}" style="padding-left: 1rem;"><b>{{this.siteNumber}}</b> - {{this.siteName}}</div>
+                        {{/each}}
+                    </div>
+                </div>
+                {{!-- Consignor Name --}}
+                <div class="col-12 selector-container pb-3">
+                    <label class="pb-1" for="cgnor-name">Name</label>
+                    <input class="form-control input-sm" type="text" id="cgnor-name" name="consignorName" data-selector="cgnor-name-options" required="true" {{#if pickupToEdit}}value="{{pickupToEdit.consignorName}}"{{/if}}>
+                </div>
+                {{!-- Consignor address --}}
+                <div class="col-12 selector-container pb-3">
+                    <label class="pb-1" for="cgnor-address">Address</label>
+                    <input class="form-control input-sm" type="text" id="cgnor-address" name="consignorAddress" data-selector="cgnor-address-options" required="true" {{#if pickupToEdit}}value="{{pickupToEdit.consignorAddress}}"{{/if}}>
+                </div>
+                {{!-- Consignor city --}}
+                <div class="col-12 selector-container pb-3">
+                    <label class="pb-1" for="cgnor-city">City</label>
+                    <input class="form-control input-sm" type="text" id="cgnor-city" name="consignorCity" data-selector="cgnor-city-options" required="true" {{#if pickupToEdit}}value="{{pickupToEdit.consignorCity}}"{{/if}}>
+                </div>
+                {{!-- Consignor contact person --}}
+                <div class="col-12 selector-container pb-3">
+                    <label class="pb-1" for="cgnor-contact">Contact person</label>
+                    <input class="form-control input-sm" type="text" id="cgnor-contact" name="consignorContact" data-selector="cgnor-contact-options" {{#if pickupToEdit}}value="{{pickupToEdit.consignorContact}}"{{/if}}>
+                </div>
+                {{!-- Consignor contact number --}}
+                <div class="col-12 selector-container pb-3">
+                    <label class="pb-1" for="cgnor-number">Contact number</label>
+                    <input class="form-control input-sm" type="text" id="cgnor-number" name="consignorNumber" data-selector="cgnor-number-options" {{#if pickupToEdit}}value="{{pickupToEdit.consignorNumber}}"{{/if}}>
+                </div>
+
+
+            </div>
+            <div class="container border align-items-center justify-content-between col-5 py-4">
+                <h5 class="text-center">Consignee</h5>
+                {{!-- Consignee Site --}}
+                <div class="col-12 selector-container pb-3">
+                    <label class="pb-1" for="cgnee-site">Site</label>
+                    <input class="form-control input-sm selector-input" type="text" id="cgnee-site" name="consigneeSite" data-selector="cgnee-site-options" required="true" {{#if pickupToEdit}}value="{{pickupToEdit.consigneeSite}}"{{/if}}>
+                    <div id="cgnee-site-options" class="container selector selector-options" style="width: 100% !important; max-height: 10rem; overflow: scroll;">
+                        {{#each sites}}
+                            <div class="selector-item site-item-cgnee" site-number="{{this.siteNumber}}" site-name="{{this.siteName}}" site-address="{{this.siteAddress}}" site-city="{{this.siteCity}}" site-contact="{{this.siteContact}}" site-contact-number="{{this.siteContactNumber}}" style="padding-left: 1rem;"><b>{{this.siteNumber}}</b> - {{this.siteName}}</div>
+                        {{/each}}
+                    </div>
+                </div>
+                {{!-- Consignee Name --}}
+                <div class="col-12 selector-container pb-3">
+                    <label class="pb-1" for="cgnee-name">Name</label>
+                    <input class="form-control input-sm" type="text" id="cgnee-name" name="consigneeName" data-selector="cgnee-name-options" required="true" {{#if pickupToEdit}}value="{{pickupToEdit.consigneeName}}"{{/if}}>
+                </div>
+                {{!-- Consignee address --}}
+                <div class="col-12 selector-container pb-3">
+                    <label class="pb-1" for="cgnee-address">Address</label>
+                    <input class="form-control input-sm" type="text" id="cgnee-address" name="consigneeAddress" data-selector="cgnee-address-options" required="true" {{#if pickupToEdit}}value="{{pickupToEdit.consigneeAddress}}"{{/if}}>
+                </div>
+                {{!-- Consignee city --}}
+                <div class="col-12 selector-container pb-3">
+                    <label class="pb-1" for="cgnee-city">City</label>
+                    <input class="form-control input-sm" type="text" id="cgnee-city" name="consigneeCity" data-selector="cgnee-city-options" required="true" {{#if pickupToEdit}}value="{{pickupToEdit.consigneeCity}}"{{/if}}>
+                </div>
+                {{!-- Consignee contact person --}}
+                <div class="col-12 selector-container pb-3">
+                    <label class="pb-1" for="cgnee-contact">Contact person</label>
+                    <input class="form-control input-sm" type="text" id="cgnee-contact" name="consigneeContact" data-selector="cgnee-contact-options" {{#if pickupToEdit}}value="{{pickupToEdit.consigneeContact}}"{{/if}}>
+                </div>
+                {{!-- Consignee contact number --}}
+                <div class="col-12 selector-container pb-3">
+                    <label class="pb-1" for="cgnee-number">Contact number</label>
+                    <input class="form-control input-sm" type="text" id="cgnee-number" name="consigneeNumber" data-selector="cgnee-number-options" {{#if pickupToEdit}}value="{{pickupToEdit.consigneeNumber}}"{{/if}}>
+                </div>
+            </div>
+        </div>
+
+        <div class="container col-12 d-flex">
+            {{!-- Couriers --}}
+            <div class="container col-2 ">
+                <label class="pb-1" for="couriers-input">Couriers</label>
+                <select class="form-control input-sm" type="select" id="couriers-input" name="courier" autocomplete="off" required >
+                    <option value="" disabled="true">Select courier</option>
+                    {{#unless pickupToEdit}}
+                    <option value=""></option>
+                    {{/unless}}
+                    {{#each couriers}}
+                        <option value="{{this.id}} - {{this.firstName}} {{this.lastName}}">{{this.id}} - {{this.firstName}} {{this.lastName}}</option>
+                    {{/each}}
+                </select>
+            </div>
+
+            {{!-- Comment --}}
+            <div class="container col-9">
+                <label class="pb-1" for="comment-input">Comment</label>
+                <input class="form-control input-sm" type="text" id="comment-input" name="comment" {{#if pickupToEdit}}value="{{pickupToEdit.comment}}"{{/if}}>
+            </div>
+
+            <input type="hidden" name="status" value="active"> 
+        </div>
+            
+
+        {{!-- Buttons --}}
+        <div class="container d-flex align-self-end align-items-end justify-content-between col-11 my-4">
+            <div>
+                <a href="/table" class="btn btn-danger align-self-start">Cancel</a>
+            </div>
+            <div>
+                {{#unless pickupToEdit}}
+                <button type="button" class="btn btn-warning" id="clearForm">
+                    Clear Form
+                </button>
+                {{/unless}}
+                {{#if pickupToEdit}}
+                    <button id="edit-submit" onclick="submitEdit()" type="button" class="btn btn-success ms-4">Submit</button>
+                {{else}}
+                    <button type="submit" class="btn btn-success ms-4">Submit</button>
+                {{/if}}
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateInput = document.getElementById('date-input');
+        dateInput.addEventListener('click', function() {
+            event.preventDefault();
+            this.showPicker();
+        })
+
+        {{#if pickupToEdit}}
+            const couriersArray = Array.from(document.getElementsByTagName('option'))
+            let couriers = [];
+            for (let courier of couriersArray){
+                couriers.push(courier.innerText);
+            }
+            let selectedCourier = '{{pickupToEdit.courier}}';
+            document.querySelectorAll(`option[value="${selectedCourier}"]`)[0].setAttribute('selected', true)
+        {{/if}}
+
+        {{#unless pickupToEdit}} 
+            dateInput.value = new Date().toISOString().split('T')[0];
+        {{/unless}}
+
+        document.querySelectorAll('.selector-input').forEach(input => {
+            const selectorId = input.dataset.selector;
+            const selectorOptions = document.getElementById(selectorId);
+
+            input.addEventListener('focus', () => {
+                selectorOptions.style.display = "block";
+            });
+
+            input.addEventListener('input', () => filterOptions(input, selectorOptions));
+
+            selectorOptions.querySelectorAll('.selector-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    input.value = item.textContent;
+                    selectorOptions.style.display = "none";
+                });
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!input.contains(event.target) && !selectorOptions.contains(event.target)) {
+                    selectorOptions.style.display = "none";
+                }
+            });
+
+            let cgnorSites = document.querySelectorAll('.site-item-cgnor');
+            for (let site of cgnorSites){
+                site.addEventListener('click', ()=> {
+                    document.getElementById('cgnor-site').value = "";
+                    document.getElementById('cgnor-site').value = site.getAttribute('site-number');
+                    document.getElementById('cgnor-name').value = site.getAttribute('site-name');
+                    document.getElementById('cgnor-address').value = site.getAttribute('site-address');
+                    document.getElementById('cgnor-city').value = site.getAttribute('site-city');
+                    document.getElementById('cgnor-contact').value = site.getAttribute('site-contact');
+                    document.getElementById('cgnor-number').value = site.getAttribute('site-contact-number');
+                })
+            }
+
+            let cgneeSites = document.querySelectorAll('.site-item-cgnee');
+            for (let site of cgneeSites){
+                site.addEventListener('click', ()=> {
+                    document.getElementById('cgnee-site').value = "";
+                    document.getElementById('cgnee-site').value = site.getAttribute('site-number');
+                    document.getElementById('cgnee-name').value = site.getAttribute('site-name');
+                    document.getElementById('cgnee-address').value = site.getAttribute('site-address');
+                    document.getElementById('cgnee-city').value = site.getAttribute('site-city');
+                    document.getElementById('cgnee-contact').value = site.getAttribute('site-contact');
+                    document.getElementById('cgnee-number').value = site.getAttribute('site-contact-number');
+                })
+            }
+        });
+
+        // Clear From
+        const fields = Array.from(document.querySelectorAll('input'));
+        fields.shift();
+        {{#unless pickupToEdit}}
+        document.getElementById('clearForm').addEventListener('click', () => {
+            for (let field of fields){
+                field.value = "";
+            }
+            document.getElementById('couriers-input').selectedIndex = 1;
+        })
+        {{/unless}}
+    });
+
+    function filterOptions(input, selectorOptions) {
+        const filter = input.value.toUpperCase();
+        selectorOptions.querySelectorAll('.selector-item').forEach(item => {
+            const txtValue = item.textContent || item.innerText;
+            item.style.display = txtValue.toUpperCase().includes(filter) ? "block" : "none";
+        });
+    }
+
+    async function submitEdit(){
+        const form = document.getElementById('form');
+
+        const protocol = document.getElementById('protocol-input').value;
+        const consignorSite = document.getElementById('cgnor-site').value;
+        const consignorName = document.getElementById('cgnor-name').value;
+        const consignorAddress = document.getElementById('cgnor-address').value;
+        const consignorCity = document.getElementById('cgnor-city').value;
+        const consigneeSite = document.getElementById('cgnee-site').value;
+        const consigneeName = document.getElementById('cgnee-name').value;
+        const consigneeAddress = document.getElementById('cgnee-address').value;
+        const consigneeCity = document.getElementById('cgnee-city').value;
+
+        if (
+            isEmpty(protocol) ||
+            isEmpty(consignorSite) || isEmpty(consignorName) ||
+            isEmpty(consignorAddress) || isEmpty(consignorCity) ||
+            isEmpty(consigneeSite) || isEmpty(consigneeName) ||
+            isEmpty(consigneeAddress) || isEmpty(consigneeCity)
+        ){
+            alert('Please provide details correctly!')
+            window.location.reload();
+        }
+
+        const data = new FormData(form);
+        
+        await fetch('/pickup/edit/{{pickupToEdit.id}}', {
+            method: 'PATCH',
+            body: JSON.stringify(Object.fromEntries(data.entries())),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = '/table';
+            } else {
+                console.log(response)
+                alert('Failed to update - provide details');
+            }
+        });
+    }
+
+    function isEmpty(str) {
+        if (typeof str !== 'string') {
+            return true; 
+        }
+        return str.trim().length === 0;
+    }
+    
+</script>

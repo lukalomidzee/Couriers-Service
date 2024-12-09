@@ -1,0 +1,295 @@
+{{> header}}
+
+
+{{#if list}}
+    <div class="border container-fluid p-3 ps-4 pe-4 table-responsive">
+        <div class="row" id="table-header">
+            <div class="col-2">
+                <label for="date-input">Date</label>
+                <input value="{{date}}" class="form-control input-sm hasDatepicker mb-3" data-val="true" type="date" id="date-input" name="date" data-val-regex="Invalid Date Format -PickUpDateStr" data-val-regex-pattern="^(([0-9])|([0-2][0-9])|(3[0-1]))\/(([1-9])|(0[1-9])|(1[0-2]))\/([1-2][0,9][0-9][0-9])$">
+            </div>
+            <div class="col-3">
+                <label for="search-input">Search courier</label>
+                <form id="search-form" class="d-flex align-items-center" onsubmit="handleFormSubmit(event)">
+                    <input class="form-control input-sm mb-3 me-2" data-val="true" type="input" id="search-input" name="courier" placeholder="Courier">
+                    <button type="submit" class="btn btn-primary mb-3">Search</button>
+                </form>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-hover">
+        <thead class="table-light align-middle">
+            <th>
+                Protocol
+            </th>
+            <th>
+                HAWB
+            </th>
+            <th>
+                <b>From</b>
+            </th>
+            <th>
+                Consignor
+            </th>
+            <th>
+                Consignor Address
+            </th>
+            <th>
+                Consignor City
+            </th>
+            <th>
+                Consignor Name
+            </th>
+            <th>
+                Consignor Number
+            </th>
+            <th>
+                <b>To</b>
+            </th>
+            <th>
+                Cosignee
+            </th>
+            <th>
+                Cosignee Address
+            </th>
+            <th>
+                Cosignee City
+            </th>
+            <th>
+                Cosignee Name
+            </th>
+            <th>
+                Cosignee Number
+            </th>
+            <th>
+                Courier
+            </th>
+            <th>
+                Comment
+            </th>
+            <th>
+                Action
+            </th>
+        </thead>
+        <tbody>
+            {{#each list}}
+            <tr class="align-middle {{#if (eq this.status 'canceled')}}table-danger{{/if}}{{#if (eq this.status 'completed')}}table-success{{/if}}">
+                <td>{{this.protocol}}</td>
+                <td>{{this.hawb}}</td>
+                <td>{{this.consignorSite}}</td>
+                <td>{{this.consignorName}}</td>
+                <td>{{this.consignorAddress}}</td>
+                <td>{{this.consignorCity}}</td>
+                <td>{{this.consignorContact}}</td>
+                <td>{{this.consignorNumber}}</td>
+                <td>{{this.consigneeSite}}</td>
+                <td>{{this.consigneeName}}</td>
+                <td>{{this.consigneeAddress}}</td>
+                <td>{{this.consigneeCity}}</td>
+                <td>{{this.consigneeContact}}</td>
+                <td>{{this.consigneeNumber}}</td>
+                <td>{{this.courier}}</td>
+                <td>{{this.comment}}</td>
+                <td>
+                    {{#if (eq this.status 'active') }}
+                    <button onclick=completeShipment({{this.id}}) style="width: 26px; height: 26px" class="btn btn-xs btn-success d-flex align-items-center justify-content-center p-0" title="Change State to Complete">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                            <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+                        </svg>
+                    </button>
+                    <a href="/pickup/edit/{{this.id}}" style="width: 26px; height: 26px" class="btn btn-xs btn-warning d-flex align-items-center justify-content-center p-0" title="Edit shipment details">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                        </svg>
+                    </a>
+                    <button onclick=cancelShipment({{this.id}}) style="width: 26px; height: 26px" class="btn btn-xs btn-danger d-flex align-items-center justify-content-center p-0" title="Cancel Shipment">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                        </svg>
+                    </button>
+                    {{/if}}
+                    {{#if (eq this.status 'completed')}}
+                    <button onclick=reactivateShipment({{this.id}}) style="width: 26px; height: 26px" class="btn btn-xs btn-primary d-flex align-items-center justify-content-center p-0" title="Reactivate Shipment">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                        </svg>
+                    </button>
+                    {{/if}}
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+        </table>
+        <h6>Total amount of pickups: {{count}}</h6>
+    </div>
+{{else}}
+    <div class="border container-fluid p-3 ps-4 pe-4 table-responsive">
+        <div class="row" id="table-header">
+            <div class="col-2">
+                <label for="date-input">Date</label>
+                <input value="{{date}}" class="form-control input-sm hasDatepicker mb-3" data-val="true" type="date" id="date-input" name="date" data-val-regex="Invalid Date Format -PickUpDateStr" data-val-regex-pattern="^(([0-9])|([0-2][0-9])|(3[0-1]))\/(([1-9])|(0[1-9])|(1[0-2]))\/([1-2][0,9][0-9][0-9])$">
+            </div>
+            <div class="col-3">
+                <label for="search-input">Search courier</label>
+                <form id="search-form" class="d-flex align-items-center" onsubmit="handleFormSubmit(event)">
+                    <input class="form-control input-sm mb-3 me-2" data-val="true" type="input" id="search-input" name="courier" placeholder="Courier">
+                    <button type="submit" class="btn btn-primary mb-3">Search</button>
+                </form>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-hover">
+            <thead class="table-light align-middle">
+                <th>
+                    Protocol
+                </th>
+                <th>
+                    HAWB
+                </th>
+                <th>
+                    <b>From</b>
+                </th>
+                <th>
+                    Consignor
+                </th>
+                <th>
+                    Consignor Address
+                </th>
+                <th>
+                    Consignor City
+                </th>
+                <th>
+                    Consignor Name
+                </th>
+                <th>
+                    Consignor Number
+                </th>
+                <th>
+                    <b>To</b>
+                </th>
+                <th>
+                    Cosignee
+                </th>
+                <th>
+                    Cosignee Address
+                </th>
+                <th>
+                    Cosignee City
+                </th>
+                <th>
+                    Cosignee Name
+                </th>
+                <th>
+                    Cosignee Number
+                </th>
+                <th>
+                    Courier
+                </th>
+                <th>
+                    Comment
+                </th>
+                <th>
+                    Action
+                </th>
+            </thead>
+        </table>
+
+        <div class="alert alert-danger">
+            <strong>Pickups not found</strong>
+        </div>
+    </div>
+{{/if}}
+
+<script>
+    let dateInput = document.getElementById('date-input');
+    let search = document.getElementById('search-input');
+    dateInput.addEventListener('click', function() {
+        event.preventDefault();
+        this.showPicker();
+    })
+
+    document.addEventListener('DOMContentLoaded', function(){
+        const params = new URLSearchParams(window.location.search);
+        const courier = params.get('courier');
+        if (courier) {
+            search.value = courier;
+        }
+    })
+
+    dateInput.addEventListener('change', function(){
+        const selectedDate = this.value;
+        const url = `/table?date=${encodeURIComponent(selectedDate)}`;
+        window.location.href = url;
+    })
+
+    function handleFormSubmit(event){
+        event.preventDefault();
+        const selectedDate = dateInput.value;
+        const searchValue = search.value;
+        const url = `/table?date=${encodeURIComponent(selectedDate)}&courier=${encodeURIComponent(searchValue)}`;
+        window.location.href = url;
+    }
+
+    async function cancelShipment(id){
+        if (confirm(`Do you want to cancel this shipment?`)) {
+            try {
+                const response = await fetch(`pickup/cancel/${id}`, {
+                    method: 'PATCH'
+                });
+
+                if (response.ok) {
+                    alert('Shipment successfully canceled!');
+                    location.reload();
+                } else {
+                    alert('Failed to cancel protocol');
+                }
+            } catch (error) {
+                console.error('Error canceling shipment:', error);
+                alert('An error occurred while canceling the shipment.');
+            }
+        }
+    }
+
+    async function completeShipment(id){
+        if (confirm(`Do you want to complete this shipment?`)) {
+            try {
+                const response = await fetch(`pickup/complete/${id}`, {
+                    method: 'PATCH'
+                });
+
+                if (response.ok) {
+                    alert('Shipment successfully completed!');
+                    location.reload();
+                } else {
+                    const errorData = await response.json();
+                    alert(`Failed to complete protocol - ${errorData.message}`);
+                }
+            } catch (error) {
+                console.error('Error complete shipment:', error);
+                alert('An error occurred while completing the shipment.');
+            }
+        }
+    }
+
+    async function reactivateShipment(id){
+        if (confirm(`Do you want to reactivate this shipment?`)) {
+            try {
+                const response = await fetch(`pickup/reactivate/${id}`, {
+                    method: 'PATCH'
+                });
+
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    const errorData = await response.json();
+                    alert(`Failed to reactivate protocol - ${errorData.message}`);
+                }
+            } catch (error) {
+                console.error('Error reactivate shipment:', error);
+                alert('An error occurred while reactivating the shipment.');
+            }
+        }
+    }
+
+</script>

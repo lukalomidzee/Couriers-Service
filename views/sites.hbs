@@ -1,0 +1,153 @@
+{{> header}}
+
+{{#if message}}
+    <div class="container text-center">
+        <p style="color: {{messageColor}};">{{message}}</p>
+    </div>
+{{/if}}
+<div class="container d-flex flex-row flex-wrap justify-content-between col-12">
+  <form action="/dictionary/sites" method="POST" class="col-4">
+    <div class="container border">
+      <h5 class="text-center pt-3">Site Details</h5>
+      {{!-- Site --}}
+      <div class="col-6 selector-container pb-3">
+          <label class="pb-1" for="site-number">Site Number</label>
+          <input class="form-control input-sm" type="text" id="site-number" name="siteNumber">
+      </div>
+      {{!-- Name --}}
+      <div class="col-12 selector-container pb-3">
+          <label class="pb-1" for="site-name">Name</label>
+          <input class="form-control input-sm" type="text" id="site-name" name="siteName">
+      </div>
+      {{!-- address --}}
+      <div class="col-12 selector-container pb-3">
+          <label class="pb-1" for="site-address">Address</label>
+          <input class="form-control input-sm" type="text" id="site-address" name="siteAddress">
+      </div>
+      {{!-- city --}}
+      <div class="col-12 selector-container pb-3">
+          <label class="pb-1" for="site-city">City</label>
+          <input class="form-control input-sm" type="text" id="site-city" name="siteCity">
+      </div>
+      {{!-- contact person --}}
+      <div class="col-12 selector-container pb-3">
+          <label class="pb-1" for="site-contact">Contact person</label>
+          <input class="form-control input-sm" type="text" id="site-contact" name="siteContact">
+      </div>
+      {{!-- contact number --}}
+      <div class="col-12 selector-container pb-3">
+          <label class="pb-1" for="site-contact-number">Contact number</label>
+          <input class="form-control input-sm" type="text" id="site-contact-number" name="siteContactNumber">
+      </div>
+      <button type="submit" class="btn btn-primary my-3">Submit</button>
+    </div>
+  </form>
+
+
+
+  {{#if siteList}}
+    <div class="border container-fluid table-responsive col-7" style="max-height: 38rem; margin: 0">
+      <h5 class="text-center pt-3">Site List</h5>
+      <table class="table table-striped table-bordered table-hover">
+        <thead class="table-light align-middle">
+          <th class="col-1">
+            ID
+          </th>
+          <th class="col-1">
+            Number
+          </th>
+          <th class="col-1">
+            Name
+          </th>
+          <th class="col-1">
+            Address
+          </th>
+          <th class="col-1">
+            City
+          </th>
+          <th class="col-1">
+            Contact Person
+          </th>
+          <th class="col-1">
+            Contact Number
+          </th>
+          <th class="col-1">
+            Delete
+          </th>
+        </thead>
+        <tbody>
+          {{#each siteList}}
+          <tr id="{{this.id}}">
+            <td class="col-1" value="{{this.id}}">{{this.id}}</td>
+            <td class="col-1" value="{{this.siteNumber}}">{{this.siteNumber}}</td>
+            <td class="col-1" value="{{this.siteName}}">{{this.siteName}}</td>
+            <td class="col-3" value="{{this.siteAddress}}">{{this.siteAddress}}</td>
+            <td class="col-3" value="{{this.siteCity}}">{{this.siteCity}}</td>
+            <td class="col-3" value="{{this.siteContact}}">{{this.siteContact}}</td>
+            <td class="col-3" value="{{this.siteContactNumber}}">{{this.siteContactNumber}}</td>
+            <td class="col-1">
+              <button style="border: none; background-color: transparent;" value="{{this.id}}" onclick="deleteSite('{{this.siteNumber}}')">
+                <svg value="{{this.siteNumber}}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="remove bi bi-trash" viewBox="0 0 16 16">
+                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                  <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                </svg>
+              </button>
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  {{else}}
+    <div class="border container-fluid table-responsive col-7" style="max-height: 38rem; margin: 0;">
+      <h5 class="text-center pt-3">Site List</h5>
+      <table class="table table-striped table-bordered table-hover">
+        <thead class="table-light align-middle">
+          <th class="col-1">
+            ID
+          </th>
+          <th class="col-1">
+            Number
+          </th>
+          <th class="col-1">
+            Name
+          </th>
+          <th class="col-1">
+            Address
+          </th>
+          <th class="col-1">
+            City
+          </th>
+          <th class="col-1">
+            Contact Person
+          </th>
+          <th class="col-1">
+            Contact Number
+          </th>
+          <th class="col-1">
+            Delete
+          </th>
+            </thead>
+      </table>
+      <div class="alert alert-danger">
+          <strong>Sites not found</strong>
+      </div>
+    </div>
+  {{/if}}
+</div>
+
+<script>
+  async function deleteSite(siteNumber) {
+  const response = await fetch(`/dictionary/sites/remove/${siteNumber}`, {
+    method: 'DELETE',
+  });
+
+  if (response.ok) {
+    alert('Site successfully deleted!')
+    location.reload();
+  } else {
+    alert('Failed to delete site');
+    location.reload();
+  }
+}
+</script>
